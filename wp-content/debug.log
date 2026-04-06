@@ -1,0 +1,28 @@
+[06-Apr-2026 02:49:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_college_setting() in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php:22
+Stack trace:
+#0 /var/www/html/wordpress-college-site/wp-includes/template-loader.php(132): include()
+#1 /var/www/html/wordpress-college-site/wp-blog-header.php(19): require_once('...')
+#2 /var/www/html/wordpress-college-site/index.php(17): require('...')
+#3 {main}
+  thrown in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php on line 22
+[06-Apr-2026 02:49:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_college_setting() in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php:22
+Stack trace:
+#0 /var/www/html/wordpress-college-site/wp-includes/template-loader.php(132): include()
+#1 /var/www/html/wordpress-college-site/wp-blog-header.php(19): require_once('...')
+#2 /var/www/html/wordpress-college-site/index.php(17): require('...')
+#3 {main}
+  thrown in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php on line 22
+[06-Apr-2026 02:49:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_college_setting() in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php:22
+Stack trace:
+#0 /var/www/html/wordpress-college-site/wp-includes/template-loader.php(132): include()
+#1 /var/www/html/wordpress-college-site/wp-blog-header.php(19): require_once('...')
+#2 /var/www/html/wordpress-college-site/index.php(17): require('...')
+#3 {main}
+  thrown in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php on line 22
+[06-Apr-2026 02:50:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_college_setting() in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php:22
+Stack trace:
+#0 /var/www/html/wordpress-college-site/wp-includes/template-loader.php(132): include()
+#1 /var/www/html/wordpress-college-site/wp-blog-header.php(19): require_once('...')
+#2 /var/www/html/wordpress-college-site/index.php(17): require('...')
+#3 {main}
+  thrown in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php on line 22
