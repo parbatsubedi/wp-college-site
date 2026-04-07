@@ -57,6 +57,11 @@ function fusion_college_elementor_canvas_template($template)
         return get_template_directory().'/templates/elementor-canvas.php';
     }
 
+    // Use full template with header/footer for Elementor pages
+    if (defined('ELEMENTOR_VERSION') && get_post_meta($post->ID, '_elementor_edit_mode', true) === 'builder') {
+        return get_template_directory().'/templates/elementor-full.php';
+    }
+
     return $template;
 }
 add_filter('template_include', 'fusion_college_elementor_canvas_template');

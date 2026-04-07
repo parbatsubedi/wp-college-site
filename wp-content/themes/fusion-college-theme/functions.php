@@ -115,6 +115,7 @@ require_once get_template_directory().'/inc/db-setup.php';
 require_once get_template_directory().'/inc/dynamic-settings.php';
 require_once get_template_directory().'/inc/elementor-compat.php';
 require_once get_template_directory().'/inc/shortcodes.php';
+require_once get_template_directory().'/inc/custom-admin.php';
 
 // ==================== CUSTOM POST TYPES ====================
 
