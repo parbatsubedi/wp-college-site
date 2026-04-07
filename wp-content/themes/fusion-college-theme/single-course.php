@@ -1,539 +1,554 @@
-<?php get_header(); ?>
+<?php
+/**
+ * Single Course Template
+ * Fully dynamic - pulls content from CPT meta fields
+ */
+get_header();
+?>
 
-<main>
-    <?php while (have_posts()) : the_post(); ?>
-        <!-- Course Header -->
-        <section class="course-header">
-            <div class="container">
-                <div class="course-header-content">
-                    <div class="course-info">
-                        <h1><?php the_title(); ?></h1>
+<main class="site-main">
+    <?php while (have_posts()) {
+        the_post(); ?>
+    
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="<?php echo esc_url(home_url('/')); ?>">Home</a>
+                <span class="separator">/</span>
+                <a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>">Courses</a>
+                <span class="separator">/</span>
+                <span class="current"><?php the_title(); ?></span>
+            </div>
+            <h1><?php the_title(); ?></h1>
+            <?php
+                $cricos_code = get_post_meta(get_the_ID(), '_course_cricos_code', true);
+        if ($cricos_code) {
+            echo '<p class="course-meta-text">CRICOS: '.esc_html($cricos_code).'</p>';
+        }
+        ?>
+        </div>
+    </section>
+
+    <!-- Course Detail -->
+    <section class="section">
+        <div class="container">
+            <div class="course-detail-grid">
+                <!-- Main Content -->
+                <div class="course-main-content">
+                    
+                    <!-- Course Overview -->
+                    <div class="course-section fade-in">
+                        <h2>Course Overview</h2>
+                        <div class="course-content">
+                            <?php the_content(); ?>
+                        </div>
+                    </div>
+
+                    <!-- Course Structure -->
+                    <?php
+                $core_units = get_post_meta(get_the_ID(), '_course_core_units', true);
+        $elective_units = get_post_meta(get_the_ID(), '_course_elective_units', true);
+
+        if ($core_units || $elective_units) {
+            ?>
+                    <div class="course-section fade-in">
+                        <h2>Course Structure</h2>
+                        <div class="course-structure-card">
+                            <?php if ($core_units) {
+                                $core_array = explode("\n", trim($core_units));
+                                if (count($core_array) > 0) {
+                                    ?>
+                            <div class="units-block">
+                                <h4>Core Units</h4>
+                                <ul class="units-list">
+                                    <?php foreach ($core_array as $unit) {
+                                        $unit = trim($unit);
+                                        if (! empty($unit)) {
+                                            ?>
+                                        <li><?php echo esc_html($unit); ?></li>
+                                    <?php }
+                                        } ?>
+                                </ul>
+                            </div>
+                            <?php }
+                                } ?>
+                            
+                            <?php if ($elective_units) {
+                                $elective_array = explode("\n", trim($elective_units));
+                                if (count($elective_array) > 0) {
+                                    ?>
+                            <div class="units-block">
+                                <h4>Elective Units</h4>
+                                <ul class="units-list">
+                                    <?php foreach ($elective_array as $unit) {
+                                        $unit = trim($unit);
+                                        if (! empty($unit)) {
+                                            ?>
+                                        <li><?php echo esc_html($unit); ?></li>
+                                    <?php }
+                                        } ?>
+                                </ul>
+                            </div>
+                            <?php }
+                                } ?>
+                        </div>
+                    </div>
+                    <?php } ?>
+
+                    <!-- Career Outcomes -->
+                    <?php
+                    $career_outcomes = get_post_meta(get_the_ID(), '_course_career_outcomes', true);
+        if ($career_outcomes) {
+            $outcomes_array = explode("\n", trim($career_outcomes));
+            if (count($outcomes_array) > 0) {
+                ?>
+                    <div class="course-section fade-in">
+                        <h2>Career Outcomes</h2>
+                        <div class="career-outcomes-grid">
+                            <?php foreach ($outcomes_array as $outcome) {
+                                $outcome = trim($outcome);
+                                if (! empty($outcome)) {
+                                    ?>
+                            <div class="career-outcome-item">
+                                <span class="career-icon">✓</span>
+                                <span><?php echo esc_html($outcome); ?></span>
+                            </div>
+                            <?php }
+                                } ?>
+                        </div>
+                    </div>
+                    <?php }
+            } ?>
+
+                    <!-- Entry Requirements -->
+                    <?php
+            $entry_requirements = get_post_meta(get_the_ID(), '_course_entry_requirements', true);
+        if ($entry_requirements) {
+            ?>
+                    <div class="course-section fade-in">
+                        <h2>Entry Requirements</h2>
+                        <div class="requirements-card">
+                            <?php echo wpautop($entry_requirements); ?>
+                        </div>
+                    </div>
+                    <?php } ?>
+
+                    <!-- International Requirements -->
+                    <?php
+            $intl_requirements = get_post_meta(get_the_ID(), '_course_international_requirements', true);
+        if ($intl_requirements) {
+            ?>
+                    <div class="course-section fade-in">
+                        <h2>International Students</h2>
+                        <div class="requirements-card">
+                            <?php echo wpautop($intl_requirements); ?>
+                        </div>
+                    </div>
+                    <?php } ?>
+
+                    <!-- How to Apply -->
+                    <?php
+            $how_to_apply = get_post_meta(get_the_ID(), '_course_how_to_apply', true);
+        if ($how_to_apply) {
+            ?>
+                    <div class="course-section fade-in">
+                        <h2>How to Apply</h2>
+                        <div class="requirements-card">
+                            <?php echo wpautop($how_to_apply); ?>
+                        </div>
+                    </div>
+                    <?php } ?>
+
+                    <!-- Fees & Payment -->
+                    <?php
+            $fees_payment = get_post_meta(get_the_ID(), '_course_fees_payment_info', true);
+        if ($fees_payment) {
+            ?>
+                    <div class="course-section fade-in">
+                        <h2>Fees & Payment Plans</h2>
+                        <div class="requirements-card">
+                            <?php echo wpautop($fees_payment); ?>
+                        </div>
+                    </div>
+                    <?php } ?>
+
+                    <!-- Policies & Forms -->
+                    <?php
+            $policies_forms = get_post_meta(get_the_ID(), '_course_policies_forms', true);
+        if ($policies_forms) {
+            ?>
+                    <div class="course-section fade-in">
+                        <h2>Policies & Forms</h2>
+                        <div class="requirements-card">
+                            <?php echo wpautop($policies_forms); ?>
+                        </div>
+                    </div>
+                    <?php } ?>
+                </div>
+
+                <!-- Sidebar -->
+                <aside class="course-sidebar">
+                    <div class="course-sidebar-card">
+                        <h3>Quick Facts</h3>
+                        
+                        <div class="quick-facts">
+                            <?php
+                    $duration = get_post_meta(get_the_ID(), '_course_duration', true);
+        $study_mode = get_post_meta(get_the_ID(), '_course_study_mode', true);
+        $location = get_post_meta(get_the_ID(), '_course_location', true);
+        $fee = get_post_meta(get_the_ID(), '_course_fee', true);
+        ?>
+                            
+                            <?php if ($duration) { ?>
+                            <div class="fact-item">
+                                <span class="fact-label">Duration</span>
+                                <span class="fact-value"><?php echo esc_html($duration); ?></span>
+                            </div>
+                            <?php } ?>
+                            
+                            <?php if ($study_mode) { ?>
+                            <div class="fact-item">
+                                <span class="fact-label">Study Mode</span>
+                                <span class="fact-value"><?php echo esc_html($study_mode); ?></span>
+                            </div>
+                            <?php } ?>
+                            
+                            <?php if ($location) { ?>
+                            <div class="fact-item">
+                                <span class="fact-label">Location</span>
+                                <span class="fact-value"><?php echo esc_html($location); ?></span>
+                            </div>
+                            <?php } ?>
+                            
+                            <?php if ($cricos_code) { ?>
+                            <div class="fact-item">
+                                <span class="fact-label">CRICOS</span>
+                                <span class="fact-value"><?php echo esc_html($cricos_code); ?></span>
+                            </div>
+                            <?php } ?>
+                        </div>
+
+                        <?php if ($fee && $fee > 0) { ?>
+                        <div class="fee-display">
+                            <span class="fee-label">Tuition Fee</span>
+                            <span class="fee-value">$<?php echo number_format($fee, 0); ?></span>
+                        </div>
+                        <?php } ?>
+
+                        <div class="sidebar-buttons">
+                            <a href="<?php echo esc_url(home_url('/admissions')); ?>?course_id=<?php echo esc_attr(get_the_ID()); ?>" class="btn btn-primary btn-full">Apply Now</a>
+                            <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-outline btn-full">Enquire Now</a>
+                        </div>
+
+                        <div class="contact-help">
+                            <h4>Need Help?</h4>
+                            <p>Speak to our course advisors</p>
+                            <a href="tel:<?php echo esc_attr(fusion_get_contact_info()['phone']); ?>" class="phone-link">
+                                📞 <?php echo esc_html(fusion_get_contact_info()['phone']); ?>
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Courses -->
+    <?php
+    $terms = get_the_terms(get_the_ID(), 'course_category');
+        if ($terms) {
+            $term_ids = wp_list_pluck($terms, 'term_id');
+            $related_courses = new WP_Query([
+                'post_type' => 'course',
+                'posts_per_page' => 3,
+                'post__not_in' => [get_the_ID()],
+                'post_status' => 'publish',
+                'tax_query' => [
+                    [
+                        'taxonomy' => 'course_category',
+                        'field' => 'term_id',
+                        'terms' => $term_ids,
+                    ],
+                ],
+            ]);
+
+            if ($related_courses->have_posts()) {
+                ?>
+    <section class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">More Courses</span>
+                <h2 class="section-title">Related Courses</h2>
+            </div>
+            <div class="courses-grid">
+                <?php while ($related_courses->have_posts()) {
+                    $related_courses->the_post(); ?>
+                <div class="course-card fade-in">
+                    <div class="course-image">
+                        <?php if (has_post_thumbnail()) { ?>
+                            <?php the_post_thumbnail('course-thumbnail'); ?>
+                        <?php } else { ?>
+                            <div class="course-image-bg" style="background: linear-gradient(135deg, #077E86, #2A7970);"></div>
+                        <?php } ?>
+                        <?php
+                            $course_terms = get_the_terms(get_the_ID(), 'course_category');
+                    if ($course_terms) {
+                        echo '<span class="course-category">'.esc_html($course_terms[0]->name).'</span>';
+                    }
+                    ?>
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+                        <p class="course-description"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
                         <div class="course-meta">
-                            <?php
-                            $duration = get_post_meta(get_the_ID(), '_course_duration', true);
-                            $fee = get_post_meta(get_the_ID(), '_course_fee', true);
-                            $study_mode = get_post_meta(get_the_ID(), '_course_study_mode', true);
-                            $location = get_post_meta(get_the_ID(), '_course_location', true);
-                            $cricos_code = get_post_meta(get_the_ID(), '_course_cricos_code', true);
-                            ?>
-
-                            <?php if ($duration): ?>
-                                <span class="meta-item">⏱️ Duration: <?php echo esc_html($duration); ?></span>
-                            <?php endif; ?>
-
-                            <?php if ($fee): ?>
-                                <span class="meta-item">💰 Fee: $<?php echo number_format($fee, 2); ?></span>
-                            <?php endif; ?>
-
-                            <?php if ($study_mode): ?>
-                                <span class="meta-item">📚 Mode: <?php echo esc_html($study_mode); ?></span>
-                            <?php endif; ?>
-
-                            <?php if ($location): ?>
-                                <span class="meta-item">📍 Location: <?php echo esc_html($location); ?></span>
-                            <?php endif; ?>
-
-                            <?php if ($cricos_code): ?>
-                                <span class="meta-item">🎓 CRICOS: <?php echo esc_html($cricos_code); ?></span>
-                            <?php endif; ?>
+                            <a href="<?php the_permalink(); ?>" class="btn btn-primary btn-small">View Details</a>
                         </div>
-
-                        <div class="course-actions">
-                            <a href="#apply" class="btn btn-primary">Apply Now</a>
-                            <a href="<?php echo get_post_type_archive_link('course'); ?>" class="btn btn-secondary">View All Courses</a>
-                        </div>
-                    </div>
-
-                    <?php if (has_post_thumbnail()): ?>
-                        <div class="course-image">
-                            <img src="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'large'); ?>" alt="<?php the_title(); ?>">
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </section>
-
-        <!-- Course Content -->
-        <section class="course-content">
-            <div class="container">
-                <div class="content-grid">
-                    <div class="main-content">
-                        <div class="course-description">
-                            <h2>Course Overview</h2>
-                            <div class="content">
-                                <?php the_content(); ?>
-                            </div>
-                        </div>
-
-                        <?php
-                        $curriculum = get_post_meta(get_the_ID(), '_course_curriculum', true);
-                        if ($curriculum):
-                        ?>
-                            <div class="course-section">
-                                <h3>Curriculum</h3>
-                                <div class="curriculum-content">
-                                    <?php echo wpautop(esc_html($curriculum)); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $core_units = get_post_meta(get_the_ID(), '_course_core_units', true);
-                        if ($core_units):
-                        ?>
-                            <div class="course-section">
-                                <h3>Core Units</h3>
-                                <div class="units-list">
-                                    <?php
-                                    $units = json_decode($core_units, true);
-                                    if (is_array($units)) {
-                                        echo '<ul>';
-                                        foreach ($units as $unit) {
-                                            echo '<li>' . esc_html($unit) . '</li>';
-                                        }
-                                        echo '</ul>';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $elective_units = get_post_meta(get_the_ID(), '_course_elective_units', true);
-                        if ($elective_units):
-                        ?>
-                            <div class="course-section">
-                                <h3>Elective Units</h3>
-                                <div class="units-list">
-                                    <?php
-                                    $units = json_decode($elective_units, true);
-                                    if (is_array($units)) {
-                                        echo '<ul>';
-                                        foreach ($units as $unit) {
-                                            echo '<li>' . esc_html($unit) . '</li>';
-                                        }
-                                        echo '</ul>';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $career_outcomes = get_post_meta(get_the_ID(), '_course_career_outcomes', true);
-                        if ($career_outcomes):
-                        ?>
-                            <div class="course-section">
-                                <h3>Career Outcomes</h3>
-                                <div class="outcomes-list">
-                                    <?php
-                                    $outcomes = json_decode($career_outcomes, true);
-                                    if (is_array($outcomes)) {
-                                        echo '<ul>';
-                                        foreach ($outcomes as $outcome) {
-                                            echo '<li>' . esc_html($outcome) . '</li>';
-                                        }
-                                        echo '</ul>';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $entry_requirements = get_post_meta(get_the_ID(), '_course_entry_requirements', true);
-                        if ($entry_requirements):
-                        ?>
-                            <div class="course-section">
-                                <h3>Entry Requirements</h3>
-                                <div class="requirements-content">
-                                    <?php echo wpautop(esc_html($entry_requirements)); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $how_to_apply = get_post_meta(get_the_ID(), '_course_how_to_apply', true);
-                        if ($how_to_apply):
-                        ?>
-                            <div class="course-section">
-                                <h3>How to Apply</h3>
-                                <div class="apply-content">
-                                    <?php echo wpautop(esc_html($how_to_apply)); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $international_requirements = get_post_meta(get_the_ID(), '_course_international_requirements', true);
-                        if ($international_requirements):
-                        ?>
-                            <div class="course-section">
-                                <h3>International Student Requirements</h3>
-                                <div class="requirements-content">
-                                    <?php echo wpautop(esc_html($international_requirements)); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $fees_payment_info = get_post_meta(get_the_ID(), '_course_fees_payment_info', true);
-                        if ($fees_payment_info):
-                        ?>
-                            <div class="course-section">
-                                <h3>Fees & Payment Information</h3>
-                                <div class="fees-content">
-                                    <?php echo wpautop(esc_html($fees_payment_info)); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $policies_forms = get_post_meta(get_the_ID(), '_course_policies_forms', true);
-                        if ($policies_forms):
-                        ?>
-                            <div class="course-section">
-                                <h3>Policies & Forms</h3>
-                                <div class="policies-content">
-                                    <?php echo wpautop(esc_html($policies_forms)); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Sidebar -->
-                    <div class="course-sidebar">
-                        <!-- Application Form -->
-                        <div class="application-widget" id="apply">
-                            <h3>Apply for this Course</h3>
-
-                            <?php if (isset($_GET['applied']) && $_GET['applied'] == '1'): ?>
-                                <div class="success-message">
-                                    <p>Thank you for your application! We'll review it and get back to you soon.</p>
-                                </div>
-                            <?php endif; ?>
-
-                            <form class="application-form" method="post" action="<?php echo admin_url('admin-post.php'); ?>">
-                                <input type="hidden" name="action" value="application_form">
-                                <input type="hidden" name="course_id" value="<?php echo get_the_ID(); ?>">
-                                <?php wp_nonce_field('application_form_nonce', 'application_nonce'); ?>
-
-                                <div class="form-group">
-                                    <label for="first_name">First Name *</label>
-                                    <input type="text" id="first_name" name="first_name" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="last_name">Last Name *</label>
-                                    <input type="text" id="last_name" name="last_name" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="email">Email Address *</label>
-                                    <input type="email" id="email" name="email" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="phone">Phone Number *</label>
-                                    <input type="tel" id="phone" name="phone" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="date_of_birth">Date of Birth</label>
-                                    <input type="date" id="date_of_birth" name="date_of_birth">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="address">Address</label>
-                                    <textarea id="address" name="address" rows="3"></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="education">Educational Background</label>
-                                    <textarea id="education" name="education" rows="3" placeholder="Please describe your educational qualifications"></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="english_proficiency">English Proficiency</label>
-                                    <select id="english_proficiency" name="english_proficiency">
-                                        <option value="">Select Level</option>
-                                        <option value="Native Speaker">Native Speaker</option>
-                                        <option value="IELTS 7.0+">IELTS 7.0+</option>
-                                        <option value="IELTS 6.5">IELTS 6.5</option>
-                                        <option value="IELTS 6.0">IELTS 6.0</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">Submit Application</button>
-                            </form>
-                        </div>
-
-                        <!-- Course Info Widget -->
-                        <div class="course-info-widget">
-                            <h3>Course Information</h3>
-                            <ul class="course-info-list">
-                                <?php if ($duration): ?>
-                                    <li><strong>Duration:</strong> <?php echo esc_html($duration); ?></li>
-                                <?php endif; ?>
-
-                                <?php if ($fee): ?>
-                                    <li><strong>Fee:</strong> $<?php echo number_format($fee, 2); ?></li>
-                                <?php endif; ?>
-
-                                <?php if ($study_mode): ?>
-                                    <li><strong>Study Mode:</strong> <?php echo esc_html($study_mode); ?></li>
-                                <?php endif; ?>
-
-                                <?php if ($location): ?>
-                                    <li><strong>Location:</strong> <?php echo esc_html($location); ?></li>
-                                <?php endif; ?>
-
-                                <?php if ($cricos_code): ?>
-                                    <li><strong>CRICOS Code:</strong> <?php echo esc_html($cricos_code); ?></li>
-                                <?php endif; ?>
-                            </ul>
-                        </div>
-
-                        <!-- Related Courses -->
-                        <?php
-                        $categories = get_the_terms(get_the_ID(), 'course_category');
-                        if ($categories) {
-                            $category_ids = wp_list_pluck($categories, 'term_id');
-                            $related_args = array(
-                                'post_type' => 'course',
-                                'posts_per_page' => 3,
-                                'post__not_in' => array(get_the_ID()),
-                                'tax_query' => array(
-                                    array(
-                                        'taxonomy' => 'course_category',
-                                        'field' => 'term_id',
-                                        'terms' => $category_ids
-                                    )
-                                )
-                            );
-
-                            $related_courses = new WP_Query($related_args);
-
-                            if ($related_courses->have_posts()):
-                            ?>
-                                <div class="related-courses-widget">
-                                    <h3>Related Courses</h3>
-                                    <ul class="related-courses-list">
-                                        <?php while ($related_courses->have_posts()): $related_courses->the_post(); ?>
-                                            <li>
-                                                <a href="<?php the_permalink(); ?>">
-                                                    <?php if (has_post_thumbnail()): ?>
-                                                        <img src="<?php echo get_the_post_thumbnail_url(get_the_ID(), 'thumbnail'); ?>" alt="<?php the_title(); ?>">
-                                                    <?php endif; ?>
-                                                    <div class="related-course-info">
-                                                        <h4><?php the_title(); ?></h4>
-                                                        <p><?php echo get_the_excerpt(); ?></p>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        <?php endwhile; ?>
-                                    </ul>
-                                </div>
-                            <?php
-                            endif;
-                            wp_reset_postdata();
-                        }
-                        ?>
                     </div>
                 </div>
+                <?php } wp_reset_postdata(); ?>
             </div>
-        </section>
-    <?php endwhile; ?>
+        </div>
+    </section>
+    <?php }
+            } ?>
+
+    <?php } ?>
 </main>
 
 <style>
-.course-header {
-    background: linear-gradient(135deg, #077E86, #2A7970);
-    color: white;
-    padding: 80px 0;
-}
-
-.course-header-content {
+.course-detail-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 40px;
-    align-items: center;
-}
-
-.course-info h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-}
-
-.course-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.meta-item {
-    background: rgba(255,255,255,0.1);
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-}
-
-.course-actions {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.course-image img {
-    width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
-
-.course-content {
-    padding: 80px 0;
-}
-
-.content-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 40px;
+    gap: 50px;
 }
 
 .course-section {
-    margin-bottom: 40px;
-    padding: 30px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 50px;
 }
 
-.course-section h3 {
-    color: #077E86;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #077E86;
-    padding-bottom: 10px;
-}
-
-.units-list ul,
-.outcomes-list ul {
-    list-style: none;
-    padding: 0;
-}
-
-.units-list li,
-.outcomes-list li {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-    position: relative;
-    padding-left: 20px;
-}
-
-.units-list li:before,
-.outcomes-list li:before {
-    content: "✓";
-    color: #077E86;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-}
-
-.course-sidebar {
-    position: sticky;
-    top: 20px;
-}
-
-.application-widget,
-.course-info-widget,
-.related-courses-widget {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-}
-
-.application-widget h3,
-.course-info-widget h3,
-.related-courses-widget h3 {
-    color: #077E86;
-    margin-bottom: 20px;
-}
-
-.course-info-list {
-    list-style: none;
-    padding: 0;
-}
-
-.course-info-list li {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.success-message {
-    background: #d4edda;
-    color: #155724;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    border: 1px solid #c3e6cb;
-}
-
-.related-courses-list {
-    list-style: none;
-    padding: 0;
-}
-
-.related-courses-list li {
-    margin-bottom: 15px;
-    border-bottom: 1px solid #eee;
+.course-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 25px;
     padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
 }
 
-.related-courses-list a {
-    display: flex;
+.course-content {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-muted);
+}
+
+.course-content p {
+    margin-bottom: 20px;
+}
+
+.course-structure-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.units-block {
+    padding: 25px;
+}
+
+.units-block:first-child {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.units-block h4 {
+    color: var(--primary);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.units-list {
+    list-style: none;
+    padding: 0;
+}
+
+.units-list li {
+    padding: 10px 0;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.units-list li:last-child {
+    border-bottom: none;
+}
+
+.career-outcomes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 15px;
-    text-decoration: none;
-    color: inherit;
 }
 
-.related-courses-list img {
-    width: 60px;
-    height: 60px;
-    border-radius: 4px;
-    object-fit: cover;
+.career-outcome-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: var(--card-bg);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
 }
 
-.related-course-info h4 {
-    margin: 0 0 5px;
-    color: #077E86;
-}
-
-.related-course-info p {
-    margin: 0;
+.career-icon {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
     font-size: 14px;
-    color: #666;
+    flex-shrink: 0;
+}
+
+.requirements-card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+/* Sidebar */
+.course-sidebar-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 40px var(--shadow);
+    border: 1px solid var(--border-color);
+    position: sticky;
+    top: 100px;
+}
+
+.course-sidebar-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.quick-facts {
+    margin-bottom: 25px;
+}
+
+.fact-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.fact-label {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.fact-value {
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.fee-display {
+    text-align: center;
+    padding: 25px 0;
+    border-top: 2px solid var(--border-color);
+    margin-top: 10px;
+}
+
+.fee-label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.fee-value {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.btn-full {
+    width: 100%;
+    text-align: center;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.contact-help {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.contact-help h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.contact-help p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.phone-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+@media (max-width: 1024px) {
+    .course-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .course-sidebar {
+        order: -1;
+    }
+    
+    .course-sidebar-card {
+        position: static;
+    }
 }
 
 @media (max-width: 768px) {
-    .course-header-content,
-    .content-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .course-info h1 {
-        font-size: 2rem;
-    }
-
-    .course-meta {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .course-actions {
-        flex-direction: column;
+    .fee-value {
+        font-size: 32px;
     }
 }
 </style>

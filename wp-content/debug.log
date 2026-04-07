@@ -26,3 +26,11 @@ Stack trace:
 #2 /var/www/html/wordpress-college-site/index.php(17): require('...')
 #3 {main}
   thrown in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php on line 22
+[06-Apr-2026 17:32:04 UTC] PHP Warning:  Attempt to read property "slug" on array in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/archive-course.php on line 48
+[06-Apr-2026 17:32:04 UTC] PHP Warning:  Attempt to read property "name" on array in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/archive-course.php on line 48
+[06-Apr-2026 17:32:04 UTC] PHP Warning:  Attempt to read property "slug" on array in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/archive-course.php on line 48
+[06-Apr-2026 17:32:04 UTC] PHP Warning:  Attempt to read property "name" on array in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/archive-course.php on line 48
+[06-Apr-2026 17:32:06 UTC] Automatic updates starting...
+[06-Apr-2026 17:32:08 UTC] Automatic updates complete.
+[06-Apr-2026 18:20:48 UTC] PHP Parse error:  syntax error, unexpected token ";", expecting ")" in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php on line 30
+[06-Apr-2026 18:20:49 UTC] PHP Parse error:  syntax error, unexpected token ";", expecting ")" in /var/www/html/wordpress-college-site/wp-content/themes/fusion-college-theme/index.php on line 30
