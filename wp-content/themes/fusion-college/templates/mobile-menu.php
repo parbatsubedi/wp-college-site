@@ -51,7 +51,6 @@
             ));
         } else {
         ?>
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="<?php echo is_front_page() ? 'active' : ''; ?>">Home</a>
         <a href="<?php echo esc_url(home_url('/')); ?>#about">About Us</a>
         <a href="<?php echo get_post_type_archive_link('course'); ?>">Courses</a>
         <a href="<?php echo get_permalink(get_page_by_path('admissions')); ?>">Admissions</a>

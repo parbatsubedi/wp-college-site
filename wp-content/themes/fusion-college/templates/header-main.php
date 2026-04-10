@@ -73,9 +73,6 @@
                 ?>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="<?php echo esc_url(home_url('/')); ?>" class="nav-link <?php echo is_front_page() ? 'active' : ''; ?>">Home</a>
-                    </li>
-                    <li class="nav-item">
                         <a href="<?php echo esc_url(home_url('/')); ?>#about" class="nav-link has-dropdown">About Us</a>
                         <div class="dropdown-menu">
                             <a href="<?php echo esc_url(home_url('/')); ?>#about">Our Story</a>
@@ -139,10 +136,6 @@
             ?>
 
             <div style="display: flex; align-items: center; gap: 15px;">
-                <button class="theme-toggle" id="themeToggle" title="Toggle Theme" style="background: none; border: none; cursor: pointer; padding: 8px; display: flex; align-items: center; gap: 8px;">
-                    <span class="theme-icon" id="sunIcon" style="font-size: 18px;">☀️</span>
-                    <span class="theme-icon" id="moonIcon" style="font-size: 18px;">🌙</span>
-                </button>
                 <div class="mobile-menu-btn" id="mobileMenuBtn">
                     <span></span>
                     <span></span>

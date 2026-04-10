@@ -60,6 +60,20 @@ function fusion_college_import_demo_data() {
             'post_status'  => 'publish',
             'post_content' => 'Contact us page with form.',
         ),
+        array(
+            'post_title'   => 'Courses',
+            'post_name'    => 'courses',
+            'post_type'    => 'page',
+            'post_status'  => 'publish',
+            'post_content' => 'Browse our courses.',
+        ),
+        array(
+            'post_title'   => 'Events',
+            'post_name'    => 'events',
+            'post_type'    => 'page',
+            'post_status'  => 'publish',
+            'post_content' => 'Upcoming events and activities.',
+        ),
     );
 
     foreach ($pages as $page) {
