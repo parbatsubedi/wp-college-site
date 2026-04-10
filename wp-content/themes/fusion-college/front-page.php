@@ -21,12 +21,8 @@ $has_content = have_posts();
 <!-- About Section -->
 <?php fusion_college_about_section(); ?>
 
-<?php
-// If the page has Gutenberg content, display it here
-if ($has_content) :
-    while (have_posts()) : the_post();
-        if (get_the_content()) :
-?>
+<!-- Elementor / Gutenberg content area -->
+<?php while (have_posts()) : the_post(); ?>
 <section class="section">
     <div class="container">
         <div class="rich-content">
@@ -34,11 +30,7 @@ if ($has_content) :
         </div>
     </div>
 </section>
-<?php
-        endif;
-    endwhile;
-endif;
-?>
+<?php endwhile; wp_reset_postdata(); ?>
 
 <!-- Featured Courses Section -->
 <?php fusion_college_featured_courses(3); ?>

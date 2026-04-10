@@ -13,6 +13,9 @@ get_header();
     array(array('label' => 'Contact'))
 ); ?>
 
+<!-- Page Content (Elementor / Gutenberg) -->
+<?php if (have_posts()) : while (have_posts()) : the_post(); the_content(); endwhile; endif; wp_reset_postdata(); ?>
+
 <!-- Contact Section -->
 <section class="section">
     <div class="container">

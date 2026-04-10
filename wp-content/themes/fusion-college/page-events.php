@@ -52,6 +52,9 @@ $past_events = new WP_Query($past_args);
     array(array('label' => 'Events'))
 ); ?>
 
+<!-- Page Content (Elementor / Gutenberg) -->
+<?php if (have_posts()) : while (have_posts()) : the_post(); the_content(); endwhile; endif; wp_reset_postdata(); ?>
+
 <!-- Events Section -->
 <section class="section">
     <div class="container">
