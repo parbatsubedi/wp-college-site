@@ -9,11 +9,15 @@ $terms = get_the_terms(get_the_ID(), 'course_category');
 if ($terms && !is_wp_error($terms)) {
     $category = $terms[0]->name;
 }
+$thumb_url = get_post_meta(get_the_ID(), '_course_featured_image', true);
+if (!$thumb_url) {
+    $thumb_url = get_the_post_thumbnail_url(get_the_ID(), 'course-thumb');
+}
 ?>
-<div class="course-card fade-in">
+<a href="<?php the_permalink(); ?>" class="course-card fade-in" style="display: block; text-decoration: none;">
     <div class="course-image">
-        <?php if (has_post_thumbnail()) : ?>
-            <div class="course-image-bg" style="background-image: url('<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'course-thumb')); ?>'); background-size: cover; background-position: center;"></div>
+        <?php if ($thumb_url) : ?>
+            <div class="course-image-bg" style="background-image: url('<?php echo esc_url($thumb_url); ?>'); background-size: cover; background-position: center;"></div>
         <?php else : ?>
             <div class="course-image-bg" style="background: linear-gradient(135deg, #077E86 0%, #2A7970 100%); display: flex; align-items: center; justify-content: center;">
                 <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
@@ -30,9 +34,9 @@ if ($terms && !is_wp_error($terms)) {
         <p class="course-description"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
         <div class="course-meta">
             <?php if ($duration) : ?>
-                <span class="course-duration">📅 <?php echo esc_html($duration); ?> Weeks</span>
+                <span class="course-duration"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Duration <?php echo esc_html($duration); ?> Weeks</span>
             <?php endif; ?>
-            <a href="<?php the_permalink(); ?>" class="btn btn-primary btn-small">View Details</a>
+            <span class="btn btn-primary btn-small">View Details</span>
         </div>
     </div>
-</div>
+</a>

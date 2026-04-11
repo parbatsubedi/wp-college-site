@@ -8,4 +8,6 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<div class="site-wrapper">
 <?php fusion_college_header(); ?>
+<main class="site-main">

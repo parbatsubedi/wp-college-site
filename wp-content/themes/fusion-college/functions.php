@@ -489,7 +489,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // Tagline
     $wp_customize->add_setting('college_tagline', array(
-        'default'           => 'of Technology',
+        'default'           => 'LEARNING EXCELLENCE IN VOCATIONAL EDUCATION TRAINING',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('college_tagline', array(
@@ -500,7 +500,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // Phone
     $wp_customize->add_setting('college_phone', array(
-        'default'           => '1300 123 456',
+        'default'           => '+61 2 7806 8110',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('college_phone', array(
@@ -511,7 +511,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // Email
     $wp_customize->add_setting('college_email', array(
-        'default'           => 'admin@fusioncollege.edu.au',
+        'default'           => 'admissions@fusioncollege.edu.au',
         'sanitize_callback' => 'sanitize_email',
     ));
     $wp_customize->add_control('college_email', array(
@@ -522,7 +522,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // Address
     $wp_customize->add_setting('college_address', array(
-        'default'           => 'Level 5, 123 George Street, Sydney NSW 2000',
+        'default'           => 'Level 5, 16-18 Wentworth Street, Parramatta NSW 2150',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('college_address', array(
@@ -533,7 +533,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // RTO Number
     $wp_customize->add_setting('rto_number', array(
-        'default'           => '45123',
+        'default'           => '46086',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('rto_number', array(
@@ -544,7 +544,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // CRICOS Code
     $wp_customize->add_setting('cricos_code', array(
-        'default'           => '03456J',
+        'default'           => '04189E',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('cricos_code', array(
@@ -555,7 +555,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // Hero Badge Text
     $wp_customize->add_setting('hero_badge', array(
-        'default'           => 'Welcome to Fusion College of Technology',
+        'default'           => 'Our Experts / Instruction for Your Bright Future',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('hero_badge', array(
@@ -566,7 +566,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // Hero Title
     $wp_customize->add_setting('hero_title', array(
-        'default'           => 'Empowering Future Professionals Through Quality Education',
+        'default'           => 'Quality Education and Training in a Favourable Environment',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('hero_title', array(
@@ -577,7 +577,7 @@ function fusion_college_customize_register($wp_customize) {
 
     // Hero Subtitle
     $wp_customize->add_setting('hero_subtitle', array(
-        'default'           => 'Launch your career with nationally recognized qualifications and industry-experienced trainers.',
+        'default'           => 'Located in Your Dream City Sydney',
         'sanitize_callback' => 'sanitize_textarea_field',
     ));
     $wp_customize->add_control('hero_subtitle', array(
@@ -602,19 +602,34 @@ function fusion_college_college_name() {
     return fusion_college_get_option('college_name', 'Fusion College of Technology');
 }
 
+// Get tagline
+function fusion_college_tagline() {
+    return fusion_college_get_option('college_tagline', 'LEARNING EXCELLENCE IN VOCATIONAL EDUCATION TRAINING');
+}
+
 // Get phone
 function fusion_college_phone() {
-    return fusion_college_get_option('college_phone', '1300 123 456');
+    return fusion_college_get_option('college_phone', '+61 2 7806 8110');
 }
 
 // Get email
 function fusion_college_email() {
-    return fusion_college_get_option('college_email', 'admin@fusioncollege.edu.au');
+    return fusion_college_get_option('college_email', 'admissions@fusioncollege.edu.au');
 }
 
 // Get address
 function fusion_college_address() {
-    return fusion_college_get_option('college_address', 'Level 5, 123 George Street, Sydney NSW 2000');
+    return fusion_college_get_option('college_address', 'Level 5, 16-18 Wentworth Street, Parramatta NSW 2150');
+}
+
+// Get RTO
+function fusion_college_rto() {
+    return fusion_college_get_option('rto_number', '46086');
+}
+
+// Get CRICOS
+function fusion_college_cricos() {
+    return fusion_college_get_option('cricos_code', '04189E');
 }
 
 // ========================================
@@ -658,3 +673,185 @@ require get_template_directory() . '/inc/acf-field-groups.php';
 
 // Include demo data seeder
 require get_template_directory() . '/inc/demo-data-seeder.php';
+
+// ========================================
+// APPLICATION FORM - CUSTOM POST TYPE
+// ========================================
+
+function fusion_college_register_application_cpt() {
+    register_post_type('application', array(
+        'labels' => array(
+            'name' => 'Applications',
+            'singular_name' => 'Application',
+            'add_new' => 'Add New',
+            'add_new_item' => 'Add New Application',
+            'edit_item' => 'Edit Application',
+            'new_item' => 'New Application',
+            'view_item' => 'View Application',
+            'search_items' => 'Search Applications',
+            'not_found' => 'No applications found',
+            'not_found_in_trash' => 'No applications found in trash',
+        ),
+        'public' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 50,
+        'menu_icon' => 'dashicons-clipboard',
+        'supports' => array('title', 'editor', 'custom-fields'),
+        'capability_type' => 'post',
+        'capabilities' => array('create_posts' => 'do_not_allow'),
+        'map_meta_cap' => true,
+        'register_meta_box_cb' => 'fusion_college_application_meta_boxes',
+    ));
+}
+add_action('init', 'fusion_college_register_application_cpt');
+
+function fusion_college_application_meta_boxes() {
+    add_meta_box('application_details', 'Application Details', 'fusion_college_application_meta_cb', 'application', 'normal', 'high');
+}
+
+function fusion_college_application_meta_cb($post) {
+    $first_name = get_post_meta($post->ID, 'first_name', true);
+    $last_name = get_post_meta($post->ID, 'last_name', true);
+    $email = get_post_meta($post->ID, 'email', true);
+    $phone = get_post_meta($post->ID, 'phone', true);
+    $date_of_birth = get_post_meta($post->ID, 'date_of_birth', true);
+    $address = get_post_meta($post->ID, 'address', true);
+    $city = get_post_meta($post->ID, 'city', true);
+    $state = get_post_meta($post->ID, 'state', true);
+    $zip_code = get_post_meta($post->ID, 'zip_code', true);
+    $country = get_post_meta($post->ID, 'country', true);
+    $course_id = get_post_meta($post->ID, 'course_id', true);
+    $status = get_post_meta($post->ID, 'status', true);
+    $notes = get_post_meta($post->ID, 'notes', true);
+    
+    $courses = get_posts(array('post_type' => 'course', 'posts_per_page' => -1));
+    ?>
+    <div class="application-meta">
+    <p><strong>Name:</strong> <?php echo esc_html($first_name . ' ' . $last_name); ?></p>
+    <p><strong>Email:</strong> <a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></p>
+    <p><strong>Phone:</strong> <?php echo esc_html($phone); ?></p>
+    <p><strong>Date of Birth:</strong> <?php echo esc_html($date_of_birth); ?></p>
+    <p><strong>Address:</strong> <?php echo esc_html($address); ?>, <?php echo esc_html($city); ?>, <?php echo esc_html($state); ?> <?php echo esc_html($zip_code); ?>, <?php echo esc_html($country); ?></p>
+    <p><strong>Course:</strong> <?php echo $course_id ? get_the_title($course_id) : 'General Inquiry'; ?></p>
+    <p><strong>Status:</strong> 
+        <select name="status">
+            <option value="pending" <?php selected($status, 'pending'); ?>>Pending</option>
+            <option value="reviewed" <?php selected($status, 'reviewed'); ?>>Reviewed</option>
+            <option value="approved" <?php selected($status, 'approved'); ?>>Approved</option>
+            <option value="rejected" <?php selected($status, 'rejected'); ?>>Rejected</option>
+        </select>
+    </p>
+    <p><strong>Notes:</strong></p>
+    <textarea name="notes" rows="4" class="widefat"><?php echo esc_textarea($notes); ?></textarea>
+    </div>
+    <?php
+}
+
+function fusion_college_save_application_meta($post_id) {
+    if (array_key_exists('status', $_POST)) {
+        update_post_meta($post_id, 'status', sanitize_text_field($_POST['status']));
+    }
+    if (array_key_exists('notes', $_POST)) {
+        update_post_meta($post_id, 'notes', sanitize_textarea_field($_POST['notes']));
+    }
+}
+add_action('save_post_application', 'fusion_college_save_application_meta');
+
+// ========================================
+// APPLICATION FORM SUBMISSION HANDLER
+// ========================================
+
+function fusion_college_handle_apply_form() {
+    check_ajax_referer('fusion-college-nonce', 'nonce');
+    
+    $first_name = sanitize_text_field($_POST['first_name']);
+    $last_name = sanitize_text_field($_POST['last_name']);
+    $email = sanitize_email($_POST['email']);
+    $phone = sanitize_text_field($_POST['phone']);
+    $date_of_birth = sanitize_text_field($_POST['date_of_birth']);
+    $address = sanitize_text_field($_POST['address']);
+    $city = sanitize_text_field($_POST['city']);
+    $state = sanitize_text_field($_POST['state']);
+    $zip_code = sanitize_text_field($_POST['zip_code']);
+    $country = sanitize_text_field($_POST['country']);
+    $course_id = intval($_POST['course_id']);
+    $message = sanitize_textarea_field($_POST['message']);
+    
+    $post_id = wp_insert_post(array(
+        'post_type' => 'application',
+        'post_title' => $first_name . ' ' . $last_name . ' - ' . date('Y-m-d'),
+        'post_status' => 'publish',
+        'post_content' => $message,
+    ));
+    
+    if ($post_id && !is_wp_error($post_id)) {
+        update_post_meta($post_id, 'first_name', $first_name);
+        update_post_meta($post_id, 'last_name', $last_name);
+        update_post_meta($post_id, 'email', $email);
+        update_post_meta($post_id, 'phone', $phone);
+        update_post_meta($post_id, 'date_of_birth', $date_of_birth);
+        update_post_meta($post_id, 'address', $address);
+        update_post_meta($post_id, 'city', $city);
+        update_post_meta($post_id, 'state', $state);
+        update_post_meta($post_id, 'zip_code', $zip_code);
+        update_post_meta($post_id, 'country', $country);
+        update_post_meta($post_id, 'course_id', $course_id);
+        update_post_meta($post_id, 'status', 'pending');
+        
+        $to = fusion_college_email();
+        $email_subject = 'New Application: ' . $first_name . ' ' . $last_name;
+        $email_body = "New Application Submitted\n\n";
+        $email_body .= "Name: {$first_name} {$last_name}\n";
+        $email_body .= "Email: {$email}\n";
+        $email_body .= "Phone: {$phone}\n";
+        $email_body .= "Date of Birth: {$date_of_birth}\n";
+        $email_body .= "Address: {$address}, {$city}, {$state} {$zip_code}, {$country}\n";
+        $email_body .= "Course: " . ($course_id ? get_the_title($course_id) : 'General Inquiry') . "\n";
+        $email_body .= "\nMessage:\n{$message}";
+        $headers = array('Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email);
+        
+        wp_mail($to, $email_subject, $email_body, $headers);
+        
+        wp_send_json_success(array('message' => 'Application submitted successfully! We will contact you soon.'));
+    } else {
+        wp_send_json_error(array('message' => 'Failed to submit application. Please try again.'));
+    }
+}
+add_action('wp_ajax_fusion_college_apply_form', 'fusion_college_handle_apply_form');
+add_action('wp_ajax_nopriv_fusion_college_apply_form', 'fusion_college_handle_apply_form');
+
+// ========================================
+// ADD CUSTOM COLUMNS TO APPLICATIONS LIST
+// ========================================
+
+function fusion_college_application_columns($columns) {
+    $columns = array(
+        'cb' => '<input type="checkbox" />',
+        'title' => 'Name',
+        'email' => 'Email',
+        'course' => 'Course',
+        'status' => 'Status',
+        'date' => 'Date',
+    );
+    return $columns;
+}
+add_filter('manage_application_posts_columns', 'fusion_college_application_columns');
+
+function fusion_college_application_column_content($column, $post_id) {
+    switch ($column) {
+        case 'email':
+            echo esc_html(get_post_meta($post_id, 'email', true));
+            break;
+        case 'course':
+            $course_id = get_post_meta($post_id, 'course_id', true);
+            echo $course_id ? get_the_title($course_id) : 'General';
+            break;
+        case 'status':
+            $status = get_post_meta($post_id, 'status', true);
+            $colors = array('pending' => '#f59e0b', 'reviewed' => '#3b82f6', 'approved' => '#10b981', 'rejected' => '#ef4444');
+            echo '<span style="color: ' . esc_attr($colors[$status] ?? '#666') . '; font-weight: bold;">' . ucfirst($status) . '</span>';
+            break;
+    }
+}
+add_action('manage_application_posts_custom_column', 'fusion_college_application_column_content', 10, 2);

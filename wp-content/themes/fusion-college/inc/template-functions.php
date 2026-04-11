@@ -29,10 +29,38 @@ function fusion_college_toast() {
     get_template_part('templates/toast');
 }
 
-// Get page banner (for page templates)
+// Get page banner (for page templates) - with page-specific banner images
 function fusion_college_page_banner($title, $subtitle = '', $breadcrumbs = array()) {
+    // Page-specific banner images from fusioncollege.edu.au
+    $page_banners = array(
+        'admissions' => 'https://fusioncollege.edu.au/wp-content/uploads/2023/02/slider-1.jpg',
+        'contact' => 'https://fusioncollege.edu.au/wp-content/uploads/2023/02/slider-1.jpg',
+        'events' => 'https://fusioncollege.edu.au/wp-content/uploads/2023/02/slider-1.jpg',
+        'courses' => 'https://fusioncollege.edu.au/wp-content/uploads/2023/02/slider-1.jpg',
+        'about-us' => 'https://fusioncollege.edu.au/wp-content/uploads/2023/02/about_img-1.png',
+        'student-info' => 'https://fusioncollege.edu.au/wp-content/uploads/2023/02/slider-1.jpg',
+    );
+    
+    // Try to match page slug
+    $page_slug = '';
+    if (is_page()) {
+        global $post;
+        $page_slug = $post->post_name;
+    } elseif (is_singular('course')) {
+        $page_slug = 'courses';
+    } elseif (is_singular('event')) {
+        $page_slug = 'events';
+    } elseif (is_post_type_archive('course')) {
+        $page_slug = 'courses';
+    } elseif (is_post_type_archive('event')) {
+        $page_slug = 'events';
+    }
+    
+    $banner_image = isset($page_banners[$page_slug]) ? $page_banners[$page_slug] : 'https://fusioncollege.edu.au/wp-content/uploads/2023/02/slider-1.jpg';
     ?>
     <div class="page-banner">
+        <div class="page-banner-bg" style="background-image: url('<?php echo esc_url($banner_image); ?>'); background-size: cover; background-position: center;"></div>
+        <div class="page-banner-overlay"></div>
         <div class="container">
             <div class="page-banner-content">
                 <h1><?php echo esc_html($title); ?></h1>
@@ -64,7 +92,7 @@ function fusion_college_cta_section($title = 'Ready to Start Your Journey?', $su
         $subtitle = 'Enroll now and take the first step towards your dream career. Our admissions team is here to help you.';
     }
     if (!$btn1_url) {
-        $btn1_url = get_permalink(get_page_by_path('admissions'));
+        $btn1_url = get_permalink(get_page_by_path('apply'));
     }
     if (!$btn2_url) {
         $btn2_url = get_permalink(get_page_by_path('contact'));
@@ -91,9 +119,9 @@ function fusion_college_cta_section($title = 'Ready to Start Your Journey?', $su
 
 // Render hero section
 function fusion_college_hero_section() {
-    $badge = fusion_college_get_option('hero_badge', 'Welcome to Fusion College of Technology');
-    $title = fusion_college_get_option('hero_title', 'Empowering Future Professionals Through Quality Education');
-    $subtitle = fusion_college_get_option('hero_subtitle', 'Launch your career with nationally recognized qualifications and industry-experienced trainers.');
+    $badge = fusion_college_get_option('hero_badge', 'Our Experts / Instruction for Your Bright Future');
+    $title = fusion_college_get_option('hero_title', 'Quality Education and Training in a Favourable Environment');
+    $subtitle = fusion_college_get_option('hero_subtitle', 'Located in Your Dream City Sydney');
 
     $courses_url = get_permalink(get_page_by_path('courses'));
     $contact_url = get_permalink(get_page_by_path('contact'));
@@ -103,15 +131,15 @@ function fusion_college_hero_section() {
     <section class="hero">
         <div class="hero-slider">
             <div class="hero-slide hero-slide-1 active">
-                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c476?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;"></div>
+                <div class="hero-slide-bg" style="background-image: url('https://fusioncollege.edu.au/wp-content/uploads/2023/02/slider-1.jpg'); background-size: cover; background-position: center;"></div>
                 <div class="hero-slide-overlay"></div>
             </div>
             <div class="hero-slide hero-slide-2">
-                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;"></div>
+                <div class="hero-slide-bg" style="background-image: url('https://fusioncollege.edu.au/wp-content/uploads/2023/02/slider-3.jpg'); background-size: cover; background-position: center;"></div>
                 <div class="hero-slide-overlay"></div>
             </div>
             <div class="hero-slide hero-slide-3">
-                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;"></div>
+                <div class="hero-slide-bg" style="background-image: url('https://fusioncollege.edu.au/wp-content/uploads/2023/02/hospitality-scaled.jpg'); background-size: cover; background-position: center;"></div>
                 <div class="hero-slide-overlay"></div>
             </div>
         </div>
@@ -146,22 +174,22 @@ function fusion_college_stats_section() {
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-card fade-in">
-                    <div class="stat-icon">🎓</div>
+                    <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
                     <div class="stat-number" data-target="5000">0</div>
                     <div class="stat-label">Students Enrolled</div>
                 </div>
                 <div class="stat-card fade-in">
-                    <div class="stat-icon">🏆</div>
+                    <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 1012 0V2z"/></svg></div>
                     <div class="stat-number" data-target="95">0</div>
                     <div class="stat-label">% Employment Rate</div>
                 </div>
                 <div class="stat-card fade-in">
-                    <div class="stat-icon">👨‍🏫</div>
+                    <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
                     <div class="stat-number" data-target="150">0</div>
                     <div class="stat-label">Industry Trainers</div>
                 </div>
                 <div class="stat-card fade-in">
-                    <div class="stat-icon">🌍</div>
+                    <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
                     <div class="stat-number" data-target="50">0</div>
                     <div class="stat-label">Countries Represented</div>
                 </div>
@@ -174,7 +202,7 @@ function fusion_college_stats_section() {
 // Render about section
 function fusion_college_about_section() {
     $college_name = fusion_college_college_name();
-    $rto = fusion_college_get_option('rto_number', '45123');
+    $rto = fusion_college_rto();
     $contact_url = get_permalink(get_page_by_path('contact'));
     if (!$contact_url) $contact_url = home_url('/contact/');
     ?>
@@ -183,20 +211,33 @@ function fusion_college_about_section() {
             <div class="about-grid">
                 <div class="about-content fade-in">
                     <h3>About <?php echo esc_html($college_name); ?></h3>
-                    <p>We are a leading educational institution dedicated to providing high-quality training and education to students from around the world. Our modern facilities, experienced trainers, and industry-focused curriculum ensure graduates are ready for the workforce.</p>
-                    <p>At <?php echo esc_html($college_name); ?>, we believe in practical learning that prepares you for real-world challenges. Our courses are designed in consultation with industry partners to ensure relevance and employment outcomes.</p>
-                    <div class="about-features">
+                    <p>Fusion College of Technology is focused on providing quality education and training in a wide range of courses that transform our students to be job-ready and are given access to many job opportunities here in Australia and overseas.</p>
+                    <p>Our vocation courses are accredited and meet national quality assurance requirements in terms of competency outcomes and assessment validity. We are committed to quality education and student satisfaction.</p>
+<div class="about-features">
                         <div class="about-feature">
-                            <div class="about-feature-icon">✓</div>
+                            <div class="about-feature-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
                             <span>Nationally Recognized Qualifications</span>
                         </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Industry-Experienced Trainers</span>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Modern Campus Facilities</span>
+                        </div>
+                        <div class="about-feature">
+                            <div class="about-feature-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Career Support Services</span>
+                        </div>
+                    </div>
                         <div class="about-feature">
                             <div class="about-feature-icon">✓</div>
                             <span>Industry-Experienced Trainers</span>
                         </div>
                         <div class="about-feature">
                             <div class="about-feature-icon">✓</div>
-                            <span>Modern Campus Facilities</span>
+                            <span>Job-Ready Training Programs</span>
                         </div>
                         <div class="about-feature">
                             <div class="about-feature-icon">✓</div>
@@ -219,8 +260,7 @@ function fusion_college_about_section() {
                         </svg>
                     </div>
                     <div class="about-badge">
-                        <span class="about-badge-number"><?php echo $rto ? 'RTO' : ''; ?></span>
-                        <span class="about-badge-text"><?php echo $rto ? esc_html($rto) : 'Registered'; ?></span>
+                        <span class="about-badge-text"><?php echo esc_html($rto); ?></span>
                     </div>
                 </div>
             </div>

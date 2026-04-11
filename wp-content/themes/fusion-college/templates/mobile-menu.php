@@ -24,13 +24,13 @@
     <div style="padding: 15px 20px; border-bottom: 1px solid var(--border-color);">
         <?php if ($phone) : ?>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: var(--text-muted); font-size: 14px;">
-            <span>📞</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 002.37 7.38 2 2 0 01-.45 2.32L8 16a2 2 0 012 2v2a2 2 0 01-2 2h-.06a19.68 19.68 0 01-1.21-3.08A2 2 0 015 9a2 2 0 012-2h3z"/></svg>
             <span><?php echo esc_html($phone); ?></span>
         </div>
         <?php endif; ?>
         <?php if ($email) : ?>
         <div style="display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 14px;">
-            <span>✉️</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             <span><?php echo esc_html($email); ?></span>
         </div>
         <?php endif; ?>

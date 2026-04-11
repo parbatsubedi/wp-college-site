@@ -84,43 +84,33 @@ $courses = new WP_Query($args);
                 <?php while ($courses->have_posts()) : $courses->the_post(); ?>
                     <?php
                     $duration = get_post_meta(get_the_ID(), '_course_duration', true);
-                    $cat = '';
                     $terms = get_the_terms(get_the_ID(), 'course_category');
-                    if ($terms && !is_wp_error($terms)) {
-                        $cat = $terms[0]->slug;
+                    $cat = $terms && !is_wp_error($terms) ? $terms[0]->name : 'Course';
+                    $thumb_url = get_post_meta(get_the_ID(), '_course_featured_image', true);
+                    if (!$thumb_url) {
+                        $thumb_url = get_the_post_thumbnail_url(get_the_ID(), 'course-thumb');
                     }
                     ?>
                     <div class="course-card fade-in">
                         <div class="course-image">
-                            <?php if (has_post_thumbnail()) : ?>
-                                <div class="course-image-bg" style="background-image: url('<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'course-thumb')); ?>'); background-size: cover; background-position: center;"></div>
+                            <?php if ($thumb_url) : ?>
+                                <div class="course-image-bg" style="background-image: url('<?php echo esc_url($thumb_url); ?>'); background-size: cover; background-position: center;"></div>
                             <?php else : ?>
-                                <div class="course-image-bg" style="background: linear-gradient(135deg, <?php echo isset($category_colors[$cat]) ? $category_colors[$cat] : $default_color; ?>); display: flex; align-items: center; justify-content: center;">
+                                <div class="course-image-bg" style="background: linear-gradient(135deg, #077E86 0%, #2A7970 100%); display: flex; align-items: center; justify-content: center;">
                                     <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
-                                        <?php if ($cat === 'it') : ?>
-                                            <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4"/>
-                                            <path d="M3 9h18M3 15h18"/>
-                                        <?php elseif ($cat === 'business') : ?>
-                                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                                        <?php elseif ($cat === 'leadership') : ?>
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                                        <?php else : ?>
-                                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                                            <circle cx="9" cy="7" r="4"/>
-                                        <?php endif; ?>
+                                        <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4"/>
+                                        <path d="M3 9h18M3 15h18"/>
                                     </svg>
                                 </div>
                             <?php endif; ?>
-                            <?php if ($cat) : ?>
-                                <span class="course-category"><?php echo esc_html(ucfirst(str_replace('-', ' ', $cat))); ?></span>
-                            <?php endif; ?>
+                            <span class="course-category"><?php echo esc_html($cat); ?></span>
                         </div>
                         <div class="course-content">
                             <h3 class="course-title"><?php the_title(); ?></h3>
                             <p class="course-description"><?php echo wp_trim_words(get_the_excerpt(), 20); ?></p>
                             <div class="course-meta">
                                 <?php if ($duration) : ?>
-                                    <span class="course-duration">📅 <?php echo esc_html($duration); ?> Weeks</span>
+                                    <span class="course-duration"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <?php echo esc_html($duration); ?> Weeks</span>
                                 <?php endif; ?>
                                 <a href="<?php the_permalink(); ?>" class="btn btn-primary btn-small">View Details</a>
                             </div>

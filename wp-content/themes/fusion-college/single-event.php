@@ -110,7 +110,7 @@ $formatted_end = $end_date ? date('F d, Y', strtotime($end_date)) : '';
                         <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 15px; color: var(--text-dark);">Need Help?</h4>
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Contact our events team</p>
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <span>📞</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 002.37 7.38 2 2 0 01-.45 2.32L8 16a2 2 0 012 2v2a2 2 0 01-2 2h-.06a19.68 19.68 0 01-1.21-3.08A2 2 0 015 9a2 2 0 012-2h3z"/></svg>
                             <span style="color: var(--text-dark); font-weight: 600;"><?php echo esc_html(fusion_college_phone()); ?></span>
                         </div>
                     </div>

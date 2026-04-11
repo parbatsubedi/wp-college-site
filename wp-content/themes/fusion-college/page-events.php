@@ -52,9 +52,6 @@ $past_events = new WP_Query($past_args);
     array(array('label' => 'Events'))
 ); ?>
 
-<!-- Page Content (Elementor / Gutenberg) -->
-<?php if (have_posts()) : while (have_posts()) : the_post(); the_content(); endwhile; endif; wp_reset_postdata(); ?>
-
 <!-- Events Section -->
 <section class="section">
     <div class="container">
@@ -87,9 +84,9 @@ $past_events = new WP_Query($past_args);
         </div>
 
         <?php if ($past_events->have_posts()) : ?>
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div class="events-grid">
             <?php while ($past_events->have_posts()) : $past_events->the_post(); ?>
-                <div class="gallery-item" style="aspect-ratio: auto; height: 200px; background: linear-gradient(135deg, #077E86 0%, #2A7970 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; text-align: center; padding: 20px;">
+                <div style="background: linear-gradient(135deg, #077E86 0%, #2A7970 100%); border-radius: 12px; padding: 30px; color: white; text-align: center; min-height: 150px; display: flex; align-items: center; justify-content: center;">
                     <div>
                         <strong><?php the_title(); ?></strong>
                         <?php $start = get_post_meta(get_the_ID(), '_event_start_date', true); ?>

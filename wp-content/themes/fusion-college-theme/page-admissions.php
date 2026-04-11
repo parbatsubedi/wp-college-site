@@ -75,7 +75,7 @@ if ($courses->have_posts()) {
                     <h2><?php echo esc_html($selected_course->post_title); ?></h2>
                     <div class="course-info-stats">
                         <div>
-                            <span class="stat-number">$<?php echo number_format($fee, 0); ?></span>
+                            <span class="stat-number">AUD<?php echo number_format($fee, 0); ?></span>
                             <p>Tuition Fee</p>
                         </div>
                         <div>
@@ -189,7 +189,7 @@ if ($courses->have_posts()) {
                     </div>
                     <?php } else { ?>
                     <div class="fees-display">
-                        <span class="fees-amount">$<?php echo number_format($fee, 0); ?></span>
+                        <span class="fees-amount">AUD<?php echo number_format($fee, 0); ?></span>
                         <span class="fees-label">Total Tuition Fee</span>
                     </div>
                     <div class="payment-options">

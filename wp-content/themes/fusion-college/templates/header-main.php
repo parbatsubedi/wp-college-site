@@ -4,30 +4,35 @@
     <div class="top-bar">
         <div class="nav-container">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; gap: 25px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 25px; flex-wrap: wrap; color: white;">
                     <?php $phone = fusion_college_phone(); ?>
                     <?php if ($phone) : ?>
-                        <span>📞 <span><?php echo esc_html($phone); ?></span></span>
+                        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 002.37 7.38 2 2 0 01-.45 2.32L8 16a2 2 0 012 2v2a2 2 0 01-2 2h-.06a19.68 19.68 0 01-1.21-3.08A2 2 0 015 9a2 2 0 012-2h3z"/></svg> <span><?php echo esc_html($phone); ?></span></span>
                     <?php endif; ?>
                     <?php $email = fusion_college_email(); ?>
                     <?php if ($email) : ?>
-                        <span>✉️ <span><?php echo esc_html($email); ?></span></span>
+                        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> <span><?php echo esc_html($email); ?></span></span>
                     <?php endif; ?>
                     <?php $address = fusion_college_address(); ?>
                     <?php if ($address) : ?>
-                        <span>📍 <?php echo esc_html($address); ?></span>
+                        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> <?php echo esc_html($address); ?></span>
                     <?php endif; ?>
                 </div>
-                <div style="display: flex; gap: 15px; align-items: center;">
-                    <?php $rto = fusion_college_get_option('rto_number'); ?>
-                    <?php if ($rto) : ?>
-                        <span>RTO: <?php echo esc_html($rto); ?></span>
-                    <?php endif; ?>
-                    <?php $cricos = fusion_college_get_option('cricos_code'); ?>
-                    <?php if ($cricos) : ?>
-                        <span>CRICOS: <?php echo esc_html($cricos); ?></span>
-                    <?php endif; ?>
-                </div>
+                <div style="display: flex; gap: 20px; align-items: center; color: white;">
+    <?php $rto = fusion_college_rto(); ?>
+    <?php if (!empty($rto)) : ?>
+        <span style="font-weight: 600; padding: 4px 12px; background: rgba(255,255,255,0.15); border-radius: 4px;">
+            RTO: <?php echo esc_html($rto); ?>
+        </span>
+    <?php endif; ?>
+
+    <?php $cricos = fusion_college_cricos(); ?>
+    <?php if (!empty($cricos)) : ?>
+        <span style="font-weight: 600; padding: 4px 12px; background: rgba(255,255,255,0.15); border-radius: 4px;">
+            CRICOS: <?php echo esc_html($cricos); ?>
+        </span>
+    <?php endif; ?>
+</div>
             </div>
         </div>
     </div>
@@ -85,27 +90,52 @@
                     <li class="nav-item">
                         <a href="<?php echo get_post_type_archive_link('course'); ?>" class="nav-link <?php echo is_post_type_archive('course') || is_singular('course') ? 'current-menu-item' : ''; ?> has-dropdown">Courses</a>
                         <div class="mega-menu">
-                            <div class="mega-menu-grid">
-                                <div class="mega-menu-column">
-                                    <h4>Information Technology</h4>
-                                    <ul>
-                                        <li><a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>">View All IT Courses</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-column">
-                                    <h4>Business & Management</h4>
-                                    <ul>
-                                        <li><a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>">View All Business Courses</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-column">
-                                    <h4>All Courses</h4>
-                                    <ul>
-                                        <li><a href="<?php echo esc_url(get_post_type_archive_link('course')); ?>">Browse All Courses</a></li>
-                                        <li><a href="<?php echo get_permalink(get_page_by_path('admissions')); ?>">How to Apply</a></li>
-                                    </ul>
+                            <?php
+                            $categories = get_terms(array(
+                                'taxonomy' => 'course_category',
+                                'hide_empty' => true,
+                                'orderby' => 'name',
+                                'order' => 'ASC',
+                            ));
+                            if ($categories && !is_wp_error($categories)) :
+                            ?>
+                            <div class="mega-menu-content">
+                                <div class="mega-menu-parents">
+                                    <?php foreach ($categories as $cat) : ?>
+                                    <div class="mega-menu-parent-item">
+                                        <a href="<?php echo esc_url(get_post_type_archive_link('course') . '?category=' . $cat->slug); ?>" class="mega-menu-category-link">
+                                            <?php echo esc_html($cat->name); ?>
+                                        </a>
+                                        <div class="mega-menu-children">
+                                            <?php
+                                            $cat_courses = get_posts(array(
+                                                'post_type' => 'course',
+                                                'posts_per_page' => -1,
+                                                'tax_query' => array(
+                                                    array(
+                                                        'taxonomy' => 'course_category',
+                                                        'field' => 'slug',
+                                                        'terms' => $cat->slug,
+                                                    ),
+                                                ),
+                                                'orderby' => 'title',
+                                                'order' => 'ASC',
+                                            ));
+                                            ?>
+                                            <div class="mega-menu-children-content">
+                                                <h4><?php echo esc_html($cat->name); ?></h4>
+                                                <ul>
+                                                    <?php foreach ($cat_courses as $course) : ?>
+                                                        <li><a href="<?php echo esc_url(get_permalink($course->ID)); ?>"><?php echo esc_html($course->post_title); ?></a></li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </li>
                     <li class="nav-item">

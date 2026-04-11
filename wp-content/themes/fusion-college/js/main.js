@@ -131,61 +131,37 @@
     }
 
     // ========================================
-    // TESTIMONIALS SLIDER
+    // TESTIMONIALS SLIDER (Multiple Cards Slide)
     // ========================================
-    const testimonialSlides = [
-        {
-            quote: '"Fusion College provided me with the skills and confidence I needed to launch my career in IT. The hands-on training and supportive instructors made all the difference in my professional development."',
-            name: 'Sarah Chen',
-            role: 'Diploma of IT Graduate, 2023'
-        },
-        {
-            quote: '"The hands-on approach to learning at Fusion College helped me gain practical skills that I use every day in my job. The career support team was amazing in helping me find employment after graduation."',
-            name: 'Michael Rodriguez',
-            role: 'Diploma of Business Graduate, 2022'
-        },
-        {
-            quote: '"Choosing Fusion College was the best decision I made for my career. The industry-experienced trainers and modern facilities provided me with a world-class education."',
-            name: 'Emma Thompson',
-            role: 'Advanced Diploma of Leadership Graduate, 2023'
-        }
-    ];
-
-    const quoteEl = document.getElementById('testimonialQuote');
-    if (quoteEl && testimonialSlides.length > 0) {
+    const testimonialCards = document.querySelectorAll('.testimonial-card');
+    const testimonialDots = document.querySelectorAll('.testimonial-dot');
+    
+    if (testimonialCards.length > 0) {
         let currentTestimonial = 0;
-
+        
         function showTestimonial(index) {
-            const nameEl = document.getElementById('testimonialName');
-            const roleEl = document.getElementById('testimonialRole');
-            const dots = document.querySelectorAll('.testimonial-dot');
-
-            if (quoteEl && testimonialSlides[index]) {
-                quoteEl.textContent = testimonialSlides[index].quote;
-                if (nameEl) nameEl.textContent = testimonialSlides[index].name;
-                if (roleEl) roleEl.textContent = testimonialSlides[index].role;
-            }
-
-            dots.forEach((dot, i) => {
+            testimonialCards.forEach((card, i) => {
+                card.classList.toggle('active', i === index);
+            });
+            testimonialDots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
-
             currentTestimonial = index;
         }
-
+        
+        // Auto testimonial slide
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonialCards.length;
+            showTestimonial(currentTestimonial);
+        }, 5000);
+        
         // Testimonial dot click handlers
-        document.querySelectorAll('.testimonial-dot').forEach((dot) => {
+        testimonialDots.forEach((dot) => {
             dot.addEventListener('click', () => {
                 const index = parseInt(dot.dataset.index);
                 showTestimonial(index);
             });
         });
-
-        // Auto testimonial slide
-        setInterval(() => {
-            currentTestimonial = (currentTestimonial + 1) % testimonialSlides.length;
-            showTestimonial(currentTestimonial);
-        }, 5000);
     }
 
     // ========================================

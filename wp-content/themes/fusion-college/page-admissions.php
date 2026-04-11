@@ -25,9 +25,6 @@ $all_courses = get_posts(array(
     array(array('label' => 'Admissions'))
 ); ?>
 
-<!-- Page Content (Elementor / Gutenberg) -->
-<?php if (have_posts()) : while (have_posts()) : the_post(); the_content(); endwhile; endif; wp_reset_postdata(); ?>
-
 <!-- Course Selection -->
 <section class="section">
     <div class="container">
@@ -46,7 +43,7 @@ $all_courses = get_posts(array(
                         <?php foreach ($all_courses as $course) : ?>
                             <?php $fee = get_post_meta($course->ID, '_course_fee', true); ?>
                             <option value="<?php echo esc_attr($course->ID); ?>" <?php selected($selected_course && $selected_course->ID == $course->ID); ?>>
-                                <?php echo esc_html($course->post_title); ?> ($<?php echo $fee ? number_format($fee, 0) : 'TBA'; ?>)
+                                <?php echo esc_html($course->post_title); ?> (AUD <?php echo $fee ? number_format($fee, 0) : 'TBA'; ?>)
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -56,6 +53,8 @@ $all_courses = get_posts(array(
 
         <?php if ($selected_course) :
             $fee = get_post_meta($selected_course->ID, '_course_fee', true);
+            $material_fee = get_post_meta($selected_course->ID, '_course_material_fee', true);
+            $application_fee = get_post_meta($selected_course->ID, '_course_application_fee', true);
             $duration = get_post_meta($selected_course->ID, '_course_duration', true);
             $location = get_post_meta($selected_course->ID, '_course_location', true);
         ?>
@@ -64,10 +63,24 @@ $all_courses = get_posts(array(
             <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 20px; padding: 40px; margin-bottom: 60px; color: white; text-align: center;">
                 <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 10px;"><?php echo esc_html($selected_course->post_title); ?></h2>
                 <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 20px;">
+                    <?php if ($application_fee) : ?>
                     <div>
-                        <span style="font-size: 28px; font-weight: 700;">$<?php echo $fee ? number_format($fee, 0) : 'TBA'; ?></span>
-                        <p style="font-size: 14px; opacity: 0.9;">Tuition Fee</p>
+                        <span style="font-size: 28px; font-weight: 700;">AUD <?php echo number_format($application_fee, 0); ?></span>
+                        <p style="font-size: 14px; opacity: 0.9;">Application Fee</p>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($fee) : ?>
+                    <div>
+                        <span style="font-size: 28px; font-weight: 700;">AUD <?php echo number_format($fee, 0); ?></span>
+                        <p style="font-size: 14px; opacity: 0.9;">Course Fee</p>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($material_fee) : ?>
+                    <div>
+                        <span style="font-size: 28px; font-weight: 700;">AUD <?php echo number_format($material_fee, 0); ?></span>
+                        <p style="font-size: 14px; opacity: 0.9;">Material Fee</p>
+                    </div>
+                    <?php endif; ?>
                     <?php if ($duration) : ?>
                     <div>
                         <span style="font-size: 28px; font-weight: 700;"><?php echo esc_html($duration); ?></span>
@@ -107,53 +120,55 @@ $all_courses = get_posts(array(
             <?php endif; ?>
 
             <!-- Entry Requirements -->
-            <div class="section-alt" style="padding: 80px 0;">
+            <div class="section section-alt">
+                <div class="container">
                 <div class="section-header">
                     <span class="section-badge">Requirements</span>
                     <h2 class="section-title">Entry Requirements</h2>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1000px; margin: 0 auto;">
-                    <div style="background: var(--card-bg); padding: 35px; border-radius: 20px; border: 1px solid var(--border-color);">
-                        <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 25px; color: var(--text-dark); display: flex; align-items: center; gap: 12px;">
-                            <span style="width: 50px; height: 50px; background: linear-gradient(135deg, #077E86 0%, #2A7970 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">🇦🇺</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1000px; margin: 0 auto;">
+                    <div style="background: var(--card-bg); padding: 30px; border-radius: 16px; border: 1px solid var(--border-color);">
+                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--text-dark); display: flex; align-items: center; gap: 12px;">
+                            <span style="width: 45px; height: 45px; background: linear-gradient(135deg, #077E86 0%, #2A7970 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">🇦🇺</span>
                             Domestic Students
                         </h3>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 15px 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
-                                <span style="color: var(--primary); font-size: 18px; font-weight: 700;">✓</span>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="padding: 12px 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
+                                <span style="color: var(--primary); font-size: 16px; font-weight: 700;">✓</span>
                                 Completion of Year 12 or equivalent
                             </li>
-                            <li style="padding: 15px 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
-                                <span style="color: var(--primary); font-size: 18px; font-weight: 700;">✓</span>
+                            <li style="padding: 12px 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
+                                <span style="color: var(--primary); font-size: 16px; font-weight: 700;">✓</span>
                                 English Language Proficiency
                             </li>
-                            <li style="padding: 15px 0; color: var(--text-muted); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
-                                <span style="color: var(--primary); font-size: 18px; font-weight: 700;">✓</span>
+                            <li style="padding: 12px 0; color: var(--text-muted); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
+                                <span style="color: var(--primary); font-size: 16px; font-weight: 700;">✓</span>
                                 Minimum 18 years of age
                             </li>
                         </ul>
                     </div>
 
-                    <div style="background: var(--card-bg); padding: 35px; border-radius: 20px; border: 1px solid var(--border-color);">
-                        <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 25px; color: var(--text-dark); display: flex; align-items: center; gap: 12px;">
-                            <span style="width: 50px; height: 50px; background: linear-gradient(135deg, #172566 0%, #1e3170 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">🌍</span>
+                    <div style="background: var(--card-bg); padding: 30px; border-radius: 16px; border: 1px solid var(--border-color);">
+                        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--text-dark); display: flex; align-items: center; gap: 12px;">
+                            <span style="width: 45px; height: 45px; background: linear-gradient(135deg, #172566 0%, #1e3170 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">🌍</span>
                             International Students
                         </h3>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 15px 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
-                                <span style="color: var(--primary); font-size: 18px; font-weight: 700;">✓</span>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="padding: 12px 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
+                                <span style="color: var(--primary); font-size: 16px; font-weight: 700;">✓</span>
                                 Valid Passport
                             </li>
-                            <li style="padding: 15px 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
-                                <span style="color: var(--primary); font-size: 18px; font-weight: 700;">✓</span>
+                            <li style="padding: 12px 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
+                                <span style="color: var(--primary); font-size: 16px; font-weight: 700;">✓</span>
                                 IELTS 5.5 (no band below 5.0) or equivalent
                             </li>
-                            <li style="padding: 15px 0; color: var(--text-muted); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
-                                <span style="color: var(--primary); font-size: 18px; font-weight: 700;">✓</span>
+                            <li style="padding: 12px 0; color: var(--text-muted); display: flex; align-items: flex-start; gap: 12px; font-size: 15px;">
+                                <span style="color: var(--primary); font-size: 16px; font-weight: 700;">✓</span>
                                 Overseas Student Health Cover
                             </li>
                         </ul>
                     </div>
+                </div>
                 </div>
             </div>
 
@@ -162,25 +177,46 @@ $all_courses = get_posts(array(
                 <span class="section-badge">Fees</span>
                 <h2 class="section-title">Fees & Payment Plans</h2>
             </div>
-            <div style="background: var(--card-bg); padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); max-width: 800px; margin: 0 auto 60px; text-align: center;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
-                    <div>
-                        <span style="font-size: 48px; font-weight: 700; color: var(--primary);">$<?php echo $fee ? number_format($fee, 0) : 'TBA'; ?></span>
-                        <p style="color: var(--text-muted); font-size: 16px;">Total Tuition Fee</p>
+            <div style="background: var(--card-bg); padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); max-width: 800px; margin: 0 auto 60px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-bottom: 30px;">
+                    <?php if ($application_fee) : ?>
+                    <div style="text-align: center; padding: 20px;">
+                        <span style="font-size: 36px; font-weight: 700; color: var(--primary);">AUD <?php echo number_format($application_fee, 0); ?></span>
+                        <p style="color: var(--text-muted); font-size: 16px; margin-top: 8px;">Enrolment Application Fee</p>
                     </div>
-                    <div style="text-align: left; padding-left: 30px; border-left: 2px solid var(--border-color);">
-                        <p style="color: var(--text-muted); margin-bottom: 10px;">Payment Options:</p>
-                        <ul style="list-style: none; padding: 0; color: var(--text-muted);">
-                            <li style="margin-bottom: 8px;">✓ Full payment upfront</li>
-                            <li style="margin-bottom: 8px;">✓ Semester-based payments</li>
-                            <li>✓ Monthly payment plans available</li>
-                        </ul>
+                    <?php endif; ?>
+                    <?php if ($fee) : ?>
+                    <div style="text-align: center; padding: 20px;">
+                        <span style="font-size: 36px; font-weight: 700; color: var(--primary);">AUD <?php echo number_format($fee, 0); ?></span>
+                        <p style="color: var(--text-muted); font-size: 16px; margin-top: 8px;">Course Fee</p>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($material_fee) : ?>
+                    <div style="text-align: center; padding: 20px;">
+                        <span style="font-size: 36px; font-weight: 700; color: var(--primary);">AUD <?php echo number_format($material_fee, 0); ?></span>
+                        <p style="color: var(--text-muted); font-size: 16px; margin-top: 8px;">Material Fee</p>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php $total_fee = ($application_fee ?: 0) + ($fee ?: 0) + ($material_fee ?: 0); ?>
+                <?php if ($total_fee > 0) : ?>
+                <div style="text-align: center; padding-top: 30px; border-top: 2px solid var(--border-color);">
+                    <p style="color: var(--text-muted); margin-bottom: 10px;">Total Investment:</p>
+                    <span style="font-size: 48px; font-weight: 700; color: var(--primary);">AUD <?php echo number_format($total_fee, 0); ?></span>
+                </div>
+                <?php endif; ?>
+                <div style="margin-top: 30px; padding-top: 30px; border-top: 2px solid var(--border-color);">
+                    <p style="color: var(--text-muted); margin-bottom: 15px; font-weight: 600;">Payment Options:</p>
+                    <ul style="list-style: none; padding: 0; color: var(--text-muted); display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;">
+                        <li style="margin-bottom: 8px;">✓ Full payment upfront</li>
+                        <li style="margin-bottom: 8px;">✓ Semester-based payments</li>
+                        <li>✓ Monthly payment plans available</li>
+                    </ul>
                 </div>
             </div>
 
             <!-- CTA -->
-            <?php fusion_college_cta_section('Ready to Apply?', 'Start your application for ' . esc_html($selected_course->post_title) . ' today.', 'Apply Now', get_permalink(get_page_by_path('contact')), 'View Course Details', get_permalink($selected_course->ID)); ?>
+            <?php fusion_college_cta_section('Ready to Apply?', 'Start your application for ' . esc_html($selected_course->post_title) . ' today.', 'Apply Now', get_permalink(get_page_by_path('apply')), 'View Course Details', get_permalink($selected_course->ID)); ?>
         </div>
         <?php else : ?>
         <!-- Default content when no course selected -->
@@ -219,7 +255,8 @@ $all_courses = get_posts(array(
                 </div>
 
                 <div style="text-align: center; margin-top: 60px;">
-                    <a href="<?php echo get_post_type_archive_link('course'); ?>" class="btn btn-primary" style="padding: 18px 45px; font-size: 16px;">Browse All Courses</a>
+                    <a href="<?php echo get_permalink(get_page_by_path('apply')); ?>" class="btn btn-primary" style="padding: 18px 45px; font-size: 16px; margin-right: 15px;">Apply Now</a>
+                    <a href="<?php echo get_post_type_archive_link('course'); ?>" class="btn btn-outline" style="padding: 18px 45px; font-size: 16px;">Browse All Courses</a>
                 </div>
             </div>
 

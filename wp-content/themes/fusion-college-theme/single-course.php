@@ -232,7 +232,7 @@ get_header();
                         <?php if ($fee && $fee > 0) { ?>
                         <div class="fee-display">
                             <span class="fee-label">Tuition Fee</span>
-                            <span class="fee-value">$<?php echo number_format($fee, 0); ?></span>
+                            <span class="fee-value">AUD<?php echo number_format($fee, 0); ?></span>
                         </div>
                         <?php } ?>
 
