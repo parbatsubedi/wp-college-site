@@ -274,6 +274,9 @@
             formData.append('action', 'fusion_college_contact_form');
             formData.append('nonce', fusionCollege.nonce);
 
+            console.log('Sending contact form to:', fusionCollege.ajaxUrl);
+            console.log('Nonce:', fusionCollege.nonce);
+
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Sending...';
@@ -283,30 +286,36 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 if (data.success) {
                     toast.textContent = data.data.message || 'Message sent successfully!';
                     toast.classList.add('show');
                     contactForm.reset();
+                    console.log('Email sent status:', data.data.email_sent);
                     setTimeout(() => {
                         toast.classList.remove('show');
                     }, 3000);
                 } else {
-                    toast.textContent = 'An error occurred. Please try again.';
+                    console.error('Error:', data.data);
+                    toast.textContent = data.data.message || 'An error occurred. Please try again.';
                     toast.classList.add('show');
                     setTimeout(() => {
                         toast.classList.remove('show');
-                    }, 3000);
+                    }, 5000);
                 }
             })
             .catch(error => {
-                toast.textContent = 'Message sent successfully!';
+                console.error('Fetch error:', error);
+                toast.textContent = 'An error occurred. Please try again.';
                 toast.classList.add('show');
-                contactForm.reset();
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 3000);
+                }, 5000);
             })
             .finally(() => {
                 submitBtn.textContent = originalText;

@@ -645,15 +645,178 @@ function fusion_college_handle_contact_form() {
     $subject = sanitize_text_field($_POST['subject']);
     $message = sanitize_textarea_field($_POST['message']);
 
-    // Send email
-    $to = fusion_college_email();
+    // Validate required fields
+    if (empty($name) || empty($email) || empty($message)) {
+        wp_send_json_error(array('message' => 'Please fill in all required fields.'));
+        return;
+    }
+
+    // Save to database as contact_message CPT
+    $post_id = wp_insert_post(array(
+        'post_title' => $name . ' - ' . $subject,
+        'post_type' => 'contact_message',
+        'post_status' => 'publish',
+        'post_content' => $message,
+    ));
+
+    // Store meta data
+    if ($post_id && !is_wp_error($post_id)) {
+        update_post_meta($post_id, '_contact_name', $name);
+        update_post_meta($post_id, '_contact_email', $email);
+        update_post_meta($post_id, '_contact_phone', $phone);
+        update_post_meta($post_id, '_contact_subject', $subject);
+        update_post_meta($post_id, '_contact_message', $message);
+        update_post_meta($post_id, '_is_read', '0');
+    }
+
+    // Send email notification
+    $notification_email = get_option('fusion_notification_email', fusion_college_email());
+    $college_name = fusion_college_college_name();
+    $college_tagline = fusion_college_tagline();
+    $college_address = fusion_college_address();
+    
+    // Generate reference number
+    $ref_number = 'ENQ-' . date('Y') . '-' . str_pad($post_id, 4, '0', STR_PAD_LEFT);
+    
+    // Format date
+    $received_date = date('d F Y, h:i A');
+    
+    // Build HTML email body
+    $email_body = '<!DOCTYPE html>
+                    <html lang="en">
+                        <head>
+                        <meta charset="UTF-8"/>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                        <title>Enquiry Notification</title>
+                        <style>
+                            * { box-sizing: border-box; margin: 0; padding: 0; }
+                            body { background: #f4f5f7; font-family: Arial, sans-serif; padding: 40px 16px; }
+                            .email { max-width: 580px; margin: 0 auto; background: #fff; border: 1px solid #e2e5ea; border-radius: 10px; overflow: hidden; }
+                            .header { padding: 22px 28px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 14px; }
+                            .logo { width: 40px; height: 40px; background: #1a3c6e; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+                            .college-name { font-size: 15px; font-weight: 600; color: #111; }
+                            .college-sub  { font-size: 12px; color: #888; margin-top: 2px; }
+                            .meta { padding: 14px 28px; border-bottom: 1px solid #e2e5ea; }
+                            .meta p { font-size: 13px; color: #666; margin-bottom: 4px; }
+                            .meta p:last-child { margin-bottom: 0; }
+                            .meta span { color: #111; }
+                            .meta .subject { font-weight: 600; }
+                            .body { padding: 24px 28px; }
+                            .body .greeting { font-size: 14px; color: #111; margin-bottom: 6px; }
+                            .body .intro { font-size: 13.5px; color: #666; line-height: 1.7; margin-bottom: 20px; }
+                            .details { border: 1px solid #e2e5ea; border-radius: 8px; overflow: hidden; margin-bottom: 18px; }
+                            .details table { width: 100%; border-collapse: collapse; font-size: 13px; }
+                            .details tr { border-bottom: 1px solid #e2e5ea; }
+                            .details tr:last-child { border-bottom: none; }
+                            .details td { padding: 10px 14px; }
+                            .details .label { color: #888; width: 38%; }
+                            .details .value { color: #111; font-weight: 500; }
+                            .details .link  { color: #185fa5; font-weight: normal; }
+                            .details .msg   { color: #333; font-style: italic; line-height: 1.6; font-weight: normal; }
+                            .notice { background: #fffbeb; border-left: 3px solid #f0c040; padding: 10px 14px; margin-bottom: 22px; font-size: 13px; color: #7a5c00; line-height: 1.6; }
+                            .actions { display: flex; gap: 10px; margin-bottom: 22px; }
+                            .btn-primary { background: #1a3c6e; color: #fff; text-decoration: none; padding: 9px 18px; border-radius: 6px; font-size: 13px; }
+                            .btn-secondary { color: #555; text-decoration: none; padding: 9px 18px; border: 1px solid #d0d4da; border-radius: 6px; font-size: 13px; }
+                            .sign { font-size: 12.5px; color: #888; line-height: 1.7; }
+                            .sign small { font-size: 11.5px; color: #aaa; }
+                            .footer { padding: 14px 28px; border-top: 1px solid #e2e5ea; text-align: center; font-size: 11.5px; color: #aaa; }
+                        </style>
+                        </head>
+                        <body>
+                        <div class="email">
+
+                        <!-- Header -->
+                        <div class="header">
+                            <div class="logo">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="4" y="11" width="16" height="10" rx="1" fill="white"/>
+                                <rect x="9" y="15" width="6" height="6" rx="1" fill="#1a3c6e"/>
+                                <rect x="8" y="8" width="8" height="5" rx="1" fill="white"/>
+                                <polygon points="12,2 15,8 9,8" fill="#f0c040"/>
+                            </svg>
+                            </div>
+                            <div>
+                            <p class="college-name">' . esc_html($college_name) . '</p>
+                            <p class="college-sub">' . esc_html($college_tagline) . '</p>
+                            </div>
+                        </div>
+
+                        <!-- Meta -->
+                        <div class="meta">
+                            <p>To: <span>' . esc_html($notification_email) . '</span></p>
+                            <p>Subject: <span class="subject">New enquiry received — Ref #' . esc_html($ref_number) . '</span></p>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="body">
+                            <p class="greeting">Dear Admin,</p>
+                            <p class="intro">A new enquiry was submitted via the college website. Details are below.</p>
+
+                            <div class="details">
+                            <table>
+                                <tr><td class="label">Name</td><td class="value">' . esc_html($name) . '</td></tr>
+                                <tr><td class="label">Email</td><td class="value link">' . esc_html($email) . '</td></tr>
+                                <tr><td class="label">Phone</td><td class="value">' . esc_html($phone) . '</td></tr>
+                                <tr><td class="label">Subject</td><td class="value">' . esc_html($subject) . '</td></tr>
+                                <tr><td class="label">Received</td><td class="value">' . esc_html($received_date) . '</td></tr>
+                                <tr>
+                                <td class="label" style="vertical-align:top;">Message</td>
+                                <td class="value msg">"' . esc_html($message) . '"</td>
+                                </tr>
+                            </table>
+                            </div>
+
+                            <div class="actions">
+                            <a href="mailto:' . esc_attr($email) . '" class="btn-primary">Reply to enquiry</a>
+                            <a href="' . esc_url(home_url('/wp-admin')) . '" class="btn-secondary">View dashboard</a>
+                            </div>
+
+                            <p class="sign">
+                            ' . esc_html($college_name) . ' Website System<br>
+                            <small>This is an automated message — please do not reply directly.</small>
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="footer">
+                            ' . esc_html($college_name) . ' · ' . esc_html($college_address) . ' · ' . esc_html(fusion_college_email()) . '
+                        </div>
+
+                        </div>
+                        </body>
+                    </html>';
+
+    // Set recipient
+    $to = $notification_email;
     $email_subject = 'Contact Form: ' . $subject;
-    $email_body = "Name: {$name}\nEmail: {$email}\nPhone: {$phone}\nSubject: {$subject}\n\nMessage:\n{$message}";
-    $headers = array('Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email);
+    
+    $headers = array(
+        'Content-Type: text/html; charset=UTF-8',
+        'Reply-To: ' . $email,
+    );
 
-    wp_mail($to, $email_subject, $email_body, $headers);
-
-    wp_send_json_success(array('message' => 'Message sent successfully!'));
+    // Send email (will use SMTP if configured)
+    $email_sent = wp_mail($to, $email_subject, $email_body, $headers);
+    
+    // Log email status for debugging
+    if ($email_sent) {
+        error_log('Contact form email sent successfully to: ' . $notification_email . ' from: ' . $name);
+    } else {
+        error_log('ERROR: Contact form email FAILED. To: ' . $notification_email . ' | From: ' . $name . ' | Subject: ' . $email_subject);
+        // Check if SMTP is configured
+        $smtp_enabled = get_option('fusion_smtp_enabled', '0');
+        if ($smtp_enabled !== '1') {
+            error_log('WARNING: SMTP is not enabled. Using PHP mail() which may fail. Enable SMTP in: Contact Messages > Email Settings');
+        }
+    }
+    
+    // Return success even if email fails (message is saved)
+    $response_message = 'Message sent successfully!';
+    if (!$email_sent) {
+        $response_message = 'Message saved! We will contact you soon.';
+    }
+    
+    wp_send_json_success(array('message' => $response_message, 'email_sent' => $email_sent));
 }
 add_action('wp_ajax_fusion_college_contact_form', 'fusion_college_handle_contact_form');
 add_action('wp_ajax_nopriv_fusion_college_contact_form', 'fusion_college_handle_contact_form');
@@ -673,6 +836,12 @@ require get_template_directory() . '/inc/acf-field-groups.php';
 
 // Include demo data seeder
 require get_template_directory() . '/inc/demo-data-seeder.php';
+
+// Include SMTP configuration
+require get_template_directory() . '/inc/smtp-config.php';
+
+// Include custom admin pages
+require get_template_directory() . '/inc/custom-admin.php';
 
 // ========================================
 // APPLICATION FORM - CUSTOM POST TYPE
@@ -799,7 +968,8 @@ function fusion_college_handle_apply_form() {
         update_post_meta($post_id, 'course_id', $course_id);
         update_post_meta($post_id, 'status', 'pending');
         
-        $to = fusion_college_email();
+        $notification_email = get_option('fusion_notification_email', fusion_college_email());
+        $to = $notification_email;
         $email_subject = 'New Application: ' . $first_name . ' ' . $last_name;
         $email_body = "New Application Submitted\n\n";
         $email_body .= "Name: {$first_name} {$last_name}\n";
